@@ -11,31 +11,28 @@ import ru.itis.repository.MessageRepository;
 import java.util.Map;
 
 @Controller
-public class GreetingController {
+public class MainController {
 
     private final MessageRepository messageRepository;
 
     @Autowired
-    public GreetingController(MessageRepository messageRepository) {
+    public MainController(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
-    @GetMapping("/greeting")
-    public String greeting(
-            @RequestParam(name = "name", required = false, defaultValue = "World")
-            String name, Map<String, Object> model){
-        model.put("name", name);
+    @GetMapping("/")
+    public String greeting(Map<String, Object> model){
         return "greeting";
     }
 
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model){
         Iterable<Message> messages = messageRepository.findAll();
         model.put("messages", messages);
         return "main";
     }
 
-    @PostMapping
+    @PostMapping("/main")
     public String add(@RequestParam String text, @RequestParam String tag,
                       Map<String, Object> model){
         messageRepository.save(Message.builder()
@@ -47,7 +44,7 @@ public class GreetingController {
         return "main";
     }
 
-    @PostMapping("filter")
+    @PostMapping("/filter")
     public String filter(@RequestParam String filter, Map<String, Object> model){
         Iterable<Message> messages;
         if (filter != null && filter.isEmpty()){
