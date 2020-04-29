@@ -1,4 +1,4 @@
-package ru.itis;
+package ru.itis.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,9 +40,21 @@ public class GreetingController {
                       Map<String, Object> model){
         messageRepository.save(Message.builder()
                 .text(text)
-                .teg(tag)
+                .tag(tag)
                 .build());
         Iterable<Message> messages = messageRepository.findAll();
+        model.put("messages", messages);
+        return "main";
+    }
+
+    @PostMapping("filter")
+    public String filter(@RequestParam String filter, Map<String, Object> model){
+        Iterable<Message> messages;
+        if (filter != null && filter.isEmpty()){
+            messages = messageRepository.findByTag(filter);
+        } else {
+            messages = messageRepository.findAll();
+        }
         model.put("messages", messages);
         return "main";
     }
