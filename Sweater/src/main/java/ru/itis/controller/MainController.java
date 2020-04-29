@@ -1,11 +1,13 @@
 package ru.itis.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.itis.model.Message;
+import ru.itis.model.User;
 import ru.itis.repository.MessageRepository;
 
 import java.util.Map;
@@ -33,18 +35,21 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String add(@RequestParam String text, @RequestParam String tag,
+    public String add(@AuthenticationPrincipal User user,
+                      @RequestParam String text,
+                      @RequestParam String tag,
                       Map<String, Object> model){
         messageRepository.save(Message.builder()
                 .text(text)
                 .tag(tag)
+                .author(user)
                 .build());
         Iterable<Message> messages = messageRepository.findAll();
         model.put("messages", messages);
         return "main";
     }
 
-    @PostMapping("/filter")
+    @PostMapping("filter")
     public String filter(@RequestParam String filter, Map<String, Object> model){
         Iterable<Message> messages;
         if (filter != null && filter.isEmpty()){

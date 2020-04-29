@@ -22,4 +22,11 @@ public class Message {
     private String text;
     private String tag;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    public String getAuthorName(){
+        return author != null ? author.getUsername() : "<none>";
+    }
 }
