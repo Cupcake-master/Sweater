@@ -3,6 +3,6 @@
 
 <@c.page>
 Add new user
-${message!" "}
+${message!}
 <@l.login path="/registration"/>
 </@c.page>
